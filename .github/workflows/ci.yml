@@ -1,0 +1,45 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  php-syntax:
+    name: PHP syntax check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+
+      - name: Check every PHP file
+        run: |
+          find . -name "*.php" -not -path "./vendor/*" -print0 | xargs -0 -n1 php -l
+
+  docker-build:
+    name: Docker build and database
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create .env from the template
+        run: cp .env.example .env
+
+      - name: Build and start the stack
+        run: docker compose up -d --build --wait
+
+      - name: Show the tables created from schema.sql
+        run: |
+          set -a; source .env; set +a
+          docker compose exec -T db mysql -u"$DB_USER" -p"$DB_PASSWORD" "$DB_NAME" -e "SHOW TABLES;"
+
+      - name: Check that the app answers
+        run: curl -f http://localhost:8080
+
+      - name: Show logs if something failed
+        if: failure()
+        run: docker compose logs
