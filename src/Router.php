@@ -29,18 +29,23 @@ class Router {
     $path = parse_url($uri, PHP_URL_PATH);
     $path = rtrim($path, '/') ?: '/';
 
-    if (!isset($this->routes[$method][$path])) {
-      http_response_code(404);
-      echo '404 - Page not Found';
-      return;
+    
+    foreach ($this->routes[$method] ?? [] as $route => [$handler, $middleware]) {
+      $pattern = "#^" . preg_replace('/\{[\w]+\}/', '([^/]+)', $route) . "$#";
+
+      if (preg_match($pattern, $path, $matches)) {
+        array_shift($matches);
+
+        foreach ($middleware as $check) {
+          $check();
+        }
+        
+        $handler(...$matches);
+        return;
+      }
     }
 
-    [$handler, $middleware] = $this->routes[$method][$path];
-
-    foreach ($middleware as $check) {
-      $check(); // middleware is array of middlewares that should be run before any code
-      // like checking the requiredRole
-    }
-    $handler();
+    http_response_code(404);
+    echo '404 - Page not Found';
   }
 }
