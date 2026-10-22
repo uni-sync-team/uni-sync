@@ -15,3 +15,5 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-av
 # Make Apache's user match your host user (fixes root-owned files on Linux)
 RUN usermod -o -u ${HOST_UID} www-data \
  && groupmod -o -g ${HOST_GID} www-data
+
+RUN sed -ri 's/AllowOverride None/AllowOverride All/g' /etc/apache2/apache2.conf
