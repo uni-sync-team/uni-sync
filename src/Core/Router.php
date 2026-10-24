@@ -3,7 +3,6 @@
 class Router {
   private array $routes = [];
 
-  // TODO: add regex for uri parsing
   public function get(string $path, callable $handler, array $middleware = []): void
   {
     $this->routes['GET'][$path] = [$handler, $middleware];
@@ -46,6 +45,7 @@ class Router {
     }
 
     http_response_code(404);
+    // TODO: good error handling
     echo '404 - Page not Found';
   }
 }
