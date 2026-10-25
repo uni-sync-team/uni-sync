@@ -223,3 +223,15 @@ CREATE TABLE historiqueAction (
   dateAction DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (idUser) REFERENCES utilisateur(idUser)
 ) ENGINE=InnoDB;
+
+
+CREATE TABLE publication (
+  idPublication   INT AUTO_INCREMENT PRIMARY KEY,
+  idAdmin         INT NOT NULL,
+  titre           VARCHAR(150) NOT NULL,
+  contenu         TEXT NOT NULL,
+  datePublication DATE NOT NULL DEFAULT (CURRENT_DATE),
+  dateExpiration  DATE NULL,
+  actif           BOOLEAN NOT NULL DEFAULT TRUE,
+  FOREIGN KEY (idAdmin) REFERENCES administrateur(idAdmin)
+) ENGINE=InnoDB;
