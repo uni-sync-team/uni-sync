@@ -18,11 +18,20 @@ spl_autoload_register(function (string $class): void {
 });
 
 Session::start();
+Database::connect();
 
 $router = new Router();
 
+$router->get('/health', function() {
+  echo "App is Up";
+});
+
+$router->get('/database', function() {
+  Database::isUp();
+});
+
 $router->get('/', function() {
-  echo "hello World";
+  echo "hello You";
 });
 
 $router->get('/{name}/{id}', function($name, $id) {
