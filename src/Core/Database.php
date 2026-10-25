@@ -19,6 +19,8 @@ class Database {
           PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
         ]);
       } catch (PDOException $e) {
+        // NOTE: bad use of getMessage() shouldn't show user error stack
+        // but onlu for now
         die("PDO Error: " . $e->getMessage());
       }
     }
