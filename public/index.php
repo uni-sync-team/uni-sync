@@ -4,18 +4,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-spl_autoload_register(function (string $class): void {
-  $base = __DIR__ . '/';
-  $base = str_replace("public", "src", $base);
-
-  foreach (['Core', 'Controllers', 'Models', 'Services', 'Middleware'] as $dir) {
-    $file = $base . $dir . '/' . $class . '.php';
-    if (is_file($file)) {
-        require $file;
-        return;
-    }
-  }
-});
+require_once 'autoloader.php';
 
 Session::start();
 Database::connect();
