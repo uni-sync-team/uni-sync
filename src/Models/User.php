@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Models;
+
+use App\Core\Database;
+use PDO;
+
 class User {
   //Session stores one role so we pick by this order
   private const ROLE_PRIORITY = ['admin', 'prof', 'etudiant'];

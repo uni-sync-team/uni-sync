@@ -43,3 +43,6 @@ jobs:
       - name: Show logs if something failed
         if: failure()
         run: docker compose logs
+
+      - name: Install PHP dependencies
+        run: docker compose exec -T web composer install --no-interaction
