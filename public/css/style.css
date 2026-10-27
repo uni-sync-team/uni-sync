@@ -1,0 +1,128 @@
+/* UniSync – feuille de style commune à toutes les pages.
+   Chargée avec : <link rel="stylesheet" href="/css/style.css">
+   Base, en-tête, boutons, formulaires, pied de page = partagés.
+   Les blocs « diaporama », « sections », « règles » et « connexion »
+   viennent de la page d'accueil ; ajoutez les styles des autres pages à la suite. */
+:root{
+  --sand:#DCCCA3; --ink:#0F3B37; --cream:#EFE6CF; --moss:#5E7A5A; --mauve:#6D6466; --sage:#90AA86; --plum:#3f4e3d;
+  --display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --body:"DM Sans","Segoe UI",Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--body);background:var(--sand);color:var(--ink);line-height:1.6;font-size:18px}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px;box-shadow:0 0 0 6px var(--sage)}
+.top :focus-visible,footer :focus-visible{outline-color:var(--sand);box-shadow:0 0 0 6px var(--moss)}
+.wrap{max-width:1160px;margin:0 auto;padding:0 28px}
+.skip{position:absolute;left:12px;top:-60px;background:var(--cream);color:var(--ink);padding:12px 20px;border-radius:999px;font-weight:700;z-index:10}
+.skip:focus{top:12px}
+
+/* en-tête */
+.top{background:var(--ink);color:var(--sand)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:24px 0}
+.logo{font-family:var(--display);font-weight:800;font-size:1.5rem;text-decoration:none;display:flex;align-items:center;gap:10px}
+.logo i{width:30px;height:30px;border-radius:50%;border:4px solid var(--sage);border-right-color:var(--sand);display:inline-block}
+nav ul{display:flex;gap:28px;list-style:none;flex-wrap:wrap}
+nav ul a{text-decoration:none;font-weight:500}
+nav ul a:hover{text-decoration:underline;text-underline-offset:6px}
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;font-weight:700;font-size:1rem;font-family:inherit;text-decoration:none;border:2px solid transparent;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-2px)}
+.btn.sage{background:var(--sage);color:var(--ink)}
+.btn.sage:hover{background:var(--cream)}
+.btn.line{border-color:var(--sand);color:var(--sand)}
+.btn.small{padding:10px 20px}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;padding:56px 0 96px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,5.2vw,4.2rem);line-height:1.04;letter-spacing:-.02em}
+.hero p{margin:24px 0 34px;max-width:46ch;font-size:1.15rem}
+.actions{display:flex;gap:14px;flex-wrap:wrap}
+
+/* diaporama des publications */
+.pubs{background:var(--cream);color:var(--ink);border-radius:26px;padding:24px;box-shadow:14px 14px 0 var(--moss)}
+.pubs header{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.pubs h2{font-family:var(--display);font-size:1.25rem}
+.pubs header span{font-size:.9rem}
+.slide{min-height:210px;display:flex;flex-direction:column;justify-content:center;gap:10px;padding:22px;border-radius:18px;background:var(--ink);color:var(--sand)}
+.slide[hidden]{display:none}
+.slide:nth-child(4n+2){background:var(--moss);color:var(--cream)}
+.slide:nth-child(4n+3){background:var(--sage);color:var(--ink)}
+.slide:nth-child(4n+4){background:var(--plum);color:var(--cream)}
+.slide time{font-family:var(--display);font-weight:700}
+.slide h3{font-family:var(--display);font-size:1.45rem;line-height:1.2}
+.slide p{font-size:1rem}
+.ctrl{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;flex-wrap:wrap}
+.ctrl button{font:inherit;font-weight:700;color:var(--ink);background:var(--cream);border:2px solid var(--ink);border-radius:999px;min-width:44px;min-height:44px;padding:0 16px;cursor:pointer}
+.ctrl button:hover{background:var(--sage)}
+.dots{display:flex;gap:6px}
+.dots button{min-width:44px;padding:0}
+.dots button[aria-current="true"]{background:var(--ink);color:var(--cream)}
+
+/* sections */
+section{padding:88px 0}
+h2.big{font-family:var(--display);font-weight:800;font-size:clamp(1.9rem,3.8vw,2.8rem);line-height:1.1;letter-spacing:-.01em;max-width:20ch}
+.lead{margin-top:16px;max-width:54ch;color:var(--plum)}
+
+/* règles */
+.band{background:var(--sage)}
+.cols{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}
+.band .lead{color:var(--ink)}
+.regles{list-style:none}
+.regles li{padding:18px 0;border-bottom:2px solid var(--ink)}
+.regles li:first-child{padding-top:0}
+.regles strong{display:block;font-size:1.1rem}
+.regles span{color:var(--plum)}
+.band .regles span{color:var(--ink)}
+
+
+/* connexion */
+.cta{background:#4a9a74}
+.cta .wrap{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center}
+.cta h2{font-family:var(--display);font-size:clamp(1.8rem,3.6vw,2.6rem);line-height:1.1;max-width:16ch}
+.cta p{margin-top:14px;max-width:44ch}
+form{background:var(--cream);border-radius:26px;padding:28px;box-shadow:10px 10px 0 var(--ink)}
+label{display:block;font-weight:700;margin-bottom:6px}
+input{width:100%;padding:14px 16px;font:inherit;color:var(--ink);background:#fff;border:2px solid var(--ink);border-radius:14px;margin-bottom:18px}
+form .btn{background:var(--ink);color:var(--cream);width:100%}
+form .btn:hover{background:var(--moss)}
+.aide{margin-top:14px;font-size:.92rem;color:var(--plum)}
+
+footer{background:var(--ink);color:var(--sand);padding:36px 0;font-size:.95rem}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* accueil : barre du haut, chiffres clés, départements et filières */
+.topbar{background:var(--plum);font-size:.9rem}
+.topbar .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+.navbtns{display:flex;gap:10px;flex-wrap:wrap}
+.chiffres{background:var(--ink);color:var(--sand);padding:36px 0}
+.chiffres dl{display:flex;justify-content:center;flex-wrap:wrap;gap:30px 72px;text-align:center}
+.chiffres dd{font-family:var(--display);font-weight:800;font-size:2.4rem;line-height:1}
+.chiffres dt{margin-top:6px}
+.stats{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 80px;
+  
+}
+#filieres{background:var(--cream)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px;margin-top:32px}
+.card{background:var(--cream);border:2px solid var(--ink);border-radius:20px;padding:24px;box-shadow:6px 6px 0 var(--moss)}
+#filieres .card{background:var(--sand)}
+.card h3,.card h4{font-family:var(--display);font-size:1.3rem;margin-bottom:8px}
+.card .meta{margin-top:12px;font-weight:700}
+.tags,.formations{list-style:none}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tags li{padding:4px 12px;border-radius:999px;background:var(--sage);font-size:.9rem}
+.dep{font-family:var(--display);font-size:1.5rem;margin-top:48px;padding-bottom:6px;border-bottom:3px solid var(--moss)}
+.formations{margin-top:14px}
+.formations li{padding:8px 0;border-top:2px solid var(--ink);display:flex;flex-direction:column}
+.formations span{color:var(--plum);font-size:.92rem}
+footer .foot{align-items:flex-start}
+footer a{text-decoration:underline;text-underline-offset:4px}
+
+@media(max-width:860px){
+  .hero,.cols,.cta .wrap{grid-template-columns:1fr}
+      section{padding:60px 0}
+  .pubs{box-shadow:8px 8px 0 var(--moss)}
+}
+@media(prefers-reduced-motion:reduce){.btn{transition:none}html{scroll-behavior:auto}}
