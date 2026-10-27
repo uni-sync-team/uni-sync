@@ -4,7 +4,7 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once 'autoloader.php';
+require_once __DIR__ . '/../autoloader.php';
 
 Session::start();
 Database::connect();
@@ -20,7 +20,12 @@ $router->get('/database', function() {
 });
 
 $router->get('/', function() {
-  echo "hello You";
+  View::render('accueil', [
+    'publications' => Publication::findActive(4),
+    'departements' => Catalogue::departements(),
+    'stats'        => Catalogue::stats(),
+    'annee'        => Catalogue::anneeCourante(),
+  ]);
 });
 
 $router->get('/{name}/{id}', function($name, $id) {
