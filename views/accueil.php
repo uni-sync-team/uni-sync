@@ -1,4 +1,7 @@
 <?php
+
+use App\Core\View;
+
 $departements ??= [];
 $stats ??= ['etudiants' => 0, 'enseignants' => 0, 'filieres' => 0, 'formations' => 0, 'modules' => 0];
 $annee ??= null;

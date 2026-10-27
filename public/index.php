@@ -4,7 +4,15 @@ ini_set('display_errors', '1');
 ini_set('display_startup_errors', '1');
 error_reporting(E_ALL);
 
-require_once __DIR__ . '/../autoloader.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+use App\Core\Session;
+use App\Core\Database;
+use App\Core\Router;
+use App\Core\View;
+use App\Models\Publication;
+use App\Models\Catalogue;
+use App\Middleware\Auth;
 
 Session::start();
 Database::connect();
@@ -33,4 +41,3 @@ $router->get('/{name}/{id}', function($name, $id) {
 }, [fn() => Auth::requireRole("admin", 'prof')]);
 
 $router->run($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI']);
-

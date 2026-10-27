@@ -1,5 +1,10 @@
 <?php
 
+namespace App\Models;
+
+use App\Core\Database;
+use PDO;
+
 class Publication {
   /**
    * Latest announcements that are visible today: active, already published,
