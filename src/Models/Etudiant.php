@@ -1,4 +1,7 @@
 <?php
+
+use App\Core\Database;
+
 class Etudiant {
   private const COLUMNS = ['idUser', 'cne', 'nom', 'prenom', 'dateNaissance', 'telephone'];
 
