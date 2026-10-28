@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Csrf;
 use App\Core\View;
 
 $departements ??= [];
@@ -153,6 +154,7 @@ $contact = ['email' => 'contact@unisync.example', 'tel' => '+212 5 00 00 00 00',
       <p>Connectez-vous avec votre login et votre mot de passe. Votre espace s’ouvre selon votre rôle.</p>
     </div>
     <form action="/login" method="post">
+      <input type="hidden" name="csrf" value="<?= View::e(Csrf::token()) ?>">
       <label for="login">Login</label>
       <input id="login" name="login" type="text" autocomplete="username" required>
       <label for="mdp">Mot de passe</label>

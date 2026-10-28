@@ -7,10 +7,9 @@ INSERT INTO role (nom, description) VALUES
   ('admin',    'Administration');
 
 INSERT INTO utilisateur (login, email, motDePasse) VALUES
-  ('etudiant', 'etud@test.com',  '$2y$10$dZushs6DjJjcbTM7AjkCjOtXEDxqggIR0iZJpRO3MlEEjq6wkOnbu'),
-  ('prof',     'prof@test.com',  '$2y$10$dZushs6DjJjcbTM7AjkCjOtXEDxqggIR0iZJpRO3MlEEjq6wkOnbu'),
-  ('admin',    'admin@test.com', '$2y$10$dZushs6DjJjcbTM7AjkCjOtXEDxqggIR0iZJpRO3MlEEjq6wkOnbu');
-
+  ('etudiant', 'etud@test.com',  '$2y$10$ve91ysUlxWUobz4xl8kcAuI4.5W9mG9GeKPCH.dzhTfKk9BQ95Ase'),
+  ('prof',     'prof@test.com',  '$2y$10$ve91ysUlxWUobz4xl8kcAuI4.5W9mG9GeKPCH.dzhTfKk9BQ95Ase'),
+  ('admin',    'admin@test.com', '$2y$10$ve91ysUlxWUobz4xl8kcAuI4.5W9mG9GeKPCH.dzhTfKk9BQ95Ase');
 
 INSERT INTO userRole (idUser, idRole)
 SELECT u.idUser, r.idRole
