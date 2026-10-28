@@ -25,7 +25,7 @@ class Session {
   }
 
   // destory the session after login out
-  public function logout(): void {
+  public static function logout(): void {
     $_SESSION = [];
     session_destroy();
     setcookie(session_name(), "", time() - 1, '/');
