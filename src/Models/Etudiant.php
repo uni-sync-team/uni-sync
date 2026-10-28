@@ -1,10 +1,12 @@
 <?php
 
+namespace App\Models;
+ 
 use App\Core\Database;
 
 class Etudiant {
   private const COLUMNS = ['idUser', 'cne', 'nom', 'prenom', 'dateNaissance', 'telephone'];
-
+    
   public static function findById(int $id): ?array
   {
     $stmt = Database::connect()->prepare(
