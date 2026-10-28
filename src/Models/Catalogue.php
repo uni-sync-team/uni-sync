@@ -1,5 +1,9 @@
 <?php
 
+namespace App\Models;
+
+use App\Core\Database;
+
 class Catalogue {
   /** Départements → filières → formations, as nested arrays. */
   public static function departements(): array
