@@ -1,5 +1,9 @@
 <?php 
 
+namespace App\Middleware;
+
+use App\Core\Session;
+
 class Auth {
   public static function requireLogin(): void {
     if (!Session::isLoggedIn()) {

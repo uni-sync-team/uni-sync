@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Models;|
+namespace App\Models;
  
 use App\Core\Database;
-use PDO;
 
 class Etudiant {
   private const COLUMNS = ['idUser', 'cne', 'nom', 'prenom', 'dateNaissance', 'telephone'];

@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Core;
+
 class Session {
   public static function start() {
     if (session_status() === PHP_SESSION_ACTIVE)
@@ -23,7 +25,7 @@ class Session {
   }
 
   // destory the session after login out
-  public function logout(): void {
+  public static function logout(): void {
     $_SESSION = [];
     session_destroy();
     setcookie(session_name(), "", time() - 1, '/');
