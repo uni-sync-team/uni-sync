@@ -25,8 +25,10 @@ class Router {
     $this->routes['DELETE'][$path] = [$handler, $middleware];
   }
 
-  public function run(string $method, string $uri): void {
+  public function run(): void {
     // parse the wanted url
+    $method = $_SERVER["REQUEST_METHOD"];
+    $uri    = $_SERVER['REQUEST_URI'];
     $path = parse_url($uri, PHP_URL_PATH);
     $path = rtrim($path, '/') ?: '/';
 
