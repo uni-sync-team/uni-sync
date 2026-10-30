@@ -1,0 +1,240 @@
+/* UniSync – page de connexion.
+   À charger après style.css :
+   <link rel="stylesheet" href="/css/login.css"> */
+
+.auth {
+  --danger: #8c2f2f;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+
+/* Panneau de gauche : l'identité, avec l'anneau du logo en grand */
+.auth-brand {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 40px 48px;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--sand);
+}
+
+.auth-brand > * {
+  position: relative;
+  z-index: 1;
+}
+
+.auth-brand::after {
+  content: "";
+  position: absolute;
+  top: -220px;
+  right: -220px;
+  width: 560px;
+  height: 560px;
+  border: 64px solid var(--sage);
+  border-right-color: var(--sand);
+  border-radius: 50%;
+  pointer-events: none;
+  animation: ring-in 1.2s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.auth-lead {
+  max-width: 18ch;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(1.9rem, 3vw, 2.8rem);
+  line-height: 1.1;
+  letter-spacing: -.01em;
+  color: var(--cream);
+}
+
+.auth-roles {
+  max-width: 44ch;
+  margin-top: 32px;
+  list-style: none;
+}
+
+.auth-roles li {
+  padding: 14px 0;
+  border-top: 2px solid var(--moss);
+}
+
+.auth-roles strong {
+  display: block;
+  color: var(--cream);
+}
+
+.auth-roles span {
+  font-size: .95rem;
+}
+
+
+/* Panneau de droite : le formulaire */
+.auth-panel {
+  display: grid;
+  place-items: center;
+  padding: 40px 28px;
+}
+
+.box {
+  width: 100%;
+  max-width: 440px;
+  padding: 36px;
+  background: var(--cream);
+  border-radius: 26px;
+  box-shadow: 10px 10px 0 var(--ink);
+}
+
+.box h1 {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+}
+
+.box .intro {
+  margin: 8px 0 28px;
+  color: var(--plum);
+}
+
+.alert {
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: #fff;
+  border: 2px solid var(--danger);
+  border-radius: 14px;
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.box label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.field {
+  position: relative;
+  margin-bottom: 18px;
+}
+
+.box input {
+  width: 100%;
+  padding: 14px 16px;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--ink);
+  border-radius: 14px;
+}
+
+.box input:focus {
+  border-color: var(--moss);
+}
+
+.field input[type="password"],
+.field input[type="text"]#mdp {
+  padding-right: 110px;
+}
+
+.reveal {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  min-height: 40px;
+  padding: 0 12px;
+  transform: translateY(-50%);
+  font: inherit;
+  font-size: .9rem;
+  font-weight: 700;
+  color: var(--plum);
+  background: transparent;
+  border: 0;
+  border-radius: 999px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.reveal:hover {
+  color: var(--ink);
+}
+
+.reveal[hidden] {
+  display: none;
+}
+
+.box .btn {
+  width: 100%;
+  margin-top: 4px;
+  background: var(--ink);
+  color: var(--cream);
+}
+
+.box .btn:hover {
+  background: var(--moss);
+}
+
+.box .aide {
+  margin-top: 14px;
+}
+
+.box .aide a {
+  text-underline-offset: 4px;
+}
+
+
+/* Une seule animation : l'anneau se met en place au chargement */
+@keyframes ring-in {
+  from {
+    transform: rotate(-120deg);
+    opacity: 0;
+  }
+
+  to {
+    transform: rotate(0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-brand::after {
+    animation: none;
+  }
+}
+
+
+/* Mobile : le panneau d'identité devient un bandeau */
+@media (max-width: 860px) {
+  .auth {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+
+  .auth-brand {
+    gap: 20px;
+    padding: 24px 28px;
+  }
+
+  .auth-brand::after,
+  .auth-roles {
+    display: none;
+  }
+
+  .auth-lead {
+    max-width: none;
+    font-size: 1.3rem;
+  }
+
+  .auth-panel {
+    padding: 32px 20px 48px;
+  }
+
+  .box {
+    padding: 28px 24px;
+    box-shadow: 6px 6px 0 var(--ink);
+  }
+}

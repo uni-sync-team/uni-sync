@@ -48,4 +48,4 @@ foreach (['etudiant' => 'Étudiant', 'prof' => 'Enseignant', 'admin' => 'Adminis
   }, [fn() => Auth::requireRole($role)]);
 }
 
-$router->run($_SERVER["REQUEST_METHOD"], $_SERVER['REQUEST_URI']);
+$router->run();
