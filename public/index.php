@@ -6,6 +6,8 @@ error_reporting(E_ALL);
 
 require __DIR__ . '/../vendor/autoload.php';
 
+use App\Controllers\AdminController;
+use App\Controllers\AdminUserController;
 use App\Controllers\AuthController;
 use App\Core\Session;
 use App\Core\Database;
@@ -14,6 +16,7 @@ use App\Core\View;
 use App\Models\Publication;
 use App\Models\Catalogue;
 use App\Middleware\Auth;
+use App\Middleware\CsrfGuard;
 
 Session::start();
 Database::connect();
@@ -42,10 +45,22 @@ $router->post('/login',  [AuthController::class, 'login']);
 $router->post('/logout', [AuthController::class, 'logout']);
 
 // One landing page per role (to be replaced by real dashboards)
-foreach (['etudiant' => 'Étudiant', 'prof' => 'Enseignant', 'admin' => 'Administrateur'] as $role => $label) {
+foreach (['etudiant' => 'Étudiant', 'prof' => 'Enseignant'] as $role => $label) {
   $router->get("/$role", function () use ($label) {
     View::render('espace', ['label' => $label]);
   }, [fn() => Auth::requireRole($role)]);
 }
+
+// ----- Administration -----
+$admin     = [fn() => Auth::requireRole('admin')];
+$adminPost = [fn() => Auth::requireRole('admin'), fn() => CsrfGuard::verify()];
+
+$router->get('/admin', [AdminController::class, 'dashboard'], $admin);
+
+$router->get('/admin/utilisateurs',                [AdminUserController::class, 'index'],  $admin);
+$router->get('/admin/utilisateurs/nouveau',        [AdminUserController::class, 'create'], $admin);
+$router->post('/admin/utilisateurs',               [AdminUserController::class, 'store'],  $adminPost);
+$router->get('/admin/utilisateurs/{id}/modifier',  [AdminUserController::class, 'edit'],   $admin);
+$router->post('/admin/utilisateurs/{id}',          [AdminUserController::class, 'update'], $adminPost);
 
 $router->run();
