@@ -5,7 +5,7 @@ use App\Core\View;
 
 $title   = 'Connexion – UniSync';
 $styles  = ['/css/login.css'];
-$scripts = ['/js/login.js'];
+$scripts = ['/script/login.js'];
 
 require __DIR__ . "/parts/header.php";
 
