@@ -20,8 +20,11 @@ class View {
       return;
     }
 
-    extract($data, EXTR_SKIP);
-    require $file;
+    // Isolated scope: a view variable named $data, $view or $file can't collide with our own.
+    (static function (string $__file, array $__vars): void {
+      extract($__vars, EXTR_SKIP);
+      require $__file;
+    })($file, $data);
   }
 
   /** Escape a value before printing it in HTML. Use it on every database value. */

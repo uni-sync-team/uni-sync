@@ -6,6 +6,7 @@ use App\Core\Csrf;
 use App\Core\Session;
 use App\Core\View;
 use App\Models\User;
+use App\Services\Audit;
 
 class AuthController {
   private const HOME = ['admin' => '/admin', 'prof' => '/prof', 'etudiant' => '/etudiant'];
@@ -39,6 +40,7 @@ class AuthController {
     }
 
     Session::login($user['idUser'], $role);
+    Audit::log('Connexion');
     self::redirectHome();
   }
 
@@ -50,6 +52,7 @@ class AuthController {
       return;
     }
 
+    Audit::log('Déconnexion');
     Session::logout();
     header('Location: /');
     exit;
