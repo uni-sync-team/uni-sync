@@ -5,6 +5,21 @@ namespace App\Core;
 class Router {
   private array $routes = [];
 
+  public static function subRouter(): Router {
+    return new Router;
+  }
+
+  public function addRouter(Router $subRouter): void
+  {
+    foreach ($subRouter->routes as $method => $routes) {
+      foreach ($routes as $path => [$handler, $middleware]) {
+        // NOTE: never pass a path with trailling slash
+        // /user/ if you do you should trim it here
+        $this->routes[$method][$path] = [$handler, $middleware];
+      }
+    }
+  }
+
   public function get(string $path, callable $handler, array $middleware = []): void
   {
     $this->routes['GET'][$path] = [$handler, $middleware];
