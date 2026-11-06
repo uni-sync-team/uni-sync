@@ -6,43 +6,14 @@ error_reporting(E_ALL);
 
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Controllers\AdminController;
-use App\Controllers\AdminUserController;
-use App\Controllers\AuthController;
 use App\Core\Session;
-use App\Core\Database;
 use App\Core\Router;
 use App\Core\View;
-use App\Models\Publication;
-use App\Models\Catalogue;
 use App\Middleware\Auth;
-use App\Middleware\CsrfGuard;
 
 Session::start();
-Database::connect();
 
 $router = new Router();
-
-$router->get('/health', function() {
-  echo "App is Up";
-});
-
-$router->get('/database', function() {
-  Database::isUp();
-});
-
-$router->get('/', function() {
-  View::render('accueil', [
-    'publications' => Publication::findActive(4),
-    'departements' => Catalogue::departements(),
-    'stats'        => Catalogue::stats(),
-    'annee'        => Catalogue::anneeCourante(),
-  ]);
-});
-
-$router->get('/login',   [AuthController::class, 'showLogin']);
-$router->post('/login',  [AuthController::class, 'login']);
-$router->post('/logout', [AuthController::class, 'logout']);
 
 // One landing page per role (to be replaced by real dashboards)
 foreach (['etudiant' => 'Étudiant', 'prof' => 'Enseignant'] as $role => $label) {
@@ -51,16 +22,13 @@ foreach (['etudiant' => 'Étudiant', 'prof' => 'Enseignant'] as $role => $label)
   }, [fn() => Auth::requireRole($role)]);
 }
 
-// ----- Administration -----
-$admin     = [fn() => Auth::requireRole('admin')];
-$adminPost = [fn() => Auth::requireRole('admin'), fn() => CsrfGuard::verify()];
+// Routes
+$adminRouter = require '../src/Routes/AdminRouter.php';
+$authRouter = require '../src/Routes/AuthRouter.php';
+$indexRouter = require '../src/Routes/IndexRouter.php';
 
-$router->get('/admin', [AdminController::class, 'dashboard'], $admin);
-
-$router->get('/admin/utilisateurs',                [AdminUserController::class, 'index'],  $admin);
-$router->get('/admin/utilisateurs/nouveau',        [AdminUserController::class, 'create'], $admin);
-$router->post('/admin/utilisateurs',               [AdminUserController::class, 'store'],  $adminPost);
-$router->get('/admin/utilisateurs/{id}/modifier',  [AdminUserController::class, 'edit'],   $admin);
-$router->post('/admin/utilisateurs/{id}',          [AdminUserController::class, 'update'], $adminPost);
+$router->addRouter($adminRouter);
+$router->addRouter($authRouter);
+$router->addRouter($indexRouter);
 
 $router->run();
