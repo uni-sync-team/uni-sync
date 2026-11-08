@@ -13,7 +13,7 @@ class AdminController {
     ['dashboard',    'Tableau de bord',       '/admin'],
     ['utilisateurs', 'Utilisateurs',          '/admin/utilisateurs'],
     ['etudiants',    'Étudiants',             '/admin/etudiants'],
-    ['enseignants',  'Enseignants',           null],
+    ['enseignants',  'Enseignants',           '/admin/enseignants'],
     ['formations',   'Formations et filières', null],
     ['annee',        'Année universitaire',   null],
     ['salles',       'Salles',                null],

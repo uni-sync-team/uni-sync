@@ -77,7 +77,7 @@ INSERT INTO module (idSemestre, code, intitule, volumeHoraire, coefficient) VALU
 
 -- Profils étudiant et enseignant pour les comptes de test
 INSERT INTO enseignant (idDepartement, idUser, nom, prenom, grade)
-SELECT (SELECT idDepartement FROM departement WHERE nom = 'Informatique'), idUser, 'Test', 'Prof', 'Professeur'
+SELECT (SELECT idDepartement FROM departement WHERE nom = 'Informatique'), idUser, 'Test', 'Prof', 'Professeur Assistant'
 FROM utilisateur WHERE login = 'prof';
 
 INSERT INTO etudiant (idUser, cne, nom, prenom, telephone, dateNaissance)
