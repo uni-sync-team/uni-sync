@@ -2,7 +2,11 @@
 <h1>Départements</h1>
 
 <div class="bar">
-  <span></span>
+  <form action="/admin/departements" method="get" role="search">
+    <label class="sr" for="q">Rechercher</label>
+    <input id="q" name="q" type="search" value="<?= View::e($q) ?>" placeholder="Nom du département">
+    <button class="btn light" type="submit">Rechercher</button>
+  </form>
   <a class="btn" href="/admin/departements/nouveau">Nouveau département</a>
 </div>
 

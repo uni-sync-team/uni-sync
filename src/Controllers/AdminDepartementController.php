@@ -10,10 +10,13 @@ class AdminDepartementController
 {
   public static function index(): void
   {
+    $q = trim((string) ($_GET['q'] ?? ''));
+
     AdminController::render('admin/departements/index', [
       'active'       => 'departements',
       'pageTitle'    => 'Départements',
-      'departements' => Departement::findAll(),
+      'departements' => Departement::findAll($q),
+      'q'            => $q
     ]);
   }
 
