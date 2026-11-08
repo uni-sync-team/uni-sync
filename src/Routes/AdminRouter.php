@@ -9,6 +9,7 @@ use App\Controllers\AdminNotificationController;
 use App\Controllers\AdminUserController;
 use App\Controllers\AdminStudentController;
 use App\Controllers\AdminEnseignantController;
+use App\Controllers\AdminAnneeController;
 use App\Middleware\Auth;
 use App\Middleware\CsrfGuard;
 
@@ -48,5 +49,12 @@ $adminRouter->get('/admin/enseignants/nouveau',        [AdminEnseignantControlle
 $adminRouter->post('/admin/enseignants',               [AdminEnseignantController::class, 'store'],  $adminPost);
 $adminRouter->get('/admin/enseignants/{id}/modifier',  [AdminEnseignantController::class, 'edit'],   $admin);
 $adminRouter->post('/admin/enseignants/{id}',          [AdminEnseignantController::class, 'update'], $adminPost);
+
+// admin - annee universitaire
+$adminRouter->get('/admin/annees',                [AdminAnneeController::class, 'index'],  $admin);
+$adminRouter->get('/admin/annees/nouveau',        [AdminAnneeController::class, 'create'], $admin);
+$adminRouter->post('/admin/annees',               [AdminAnneeController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/annees/{id}/modifier',  [AdminAnneeController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/annees/{id}',          [AdminAnneeController::class, 'update'], $adminPost);
 
 return $adminRouter;
