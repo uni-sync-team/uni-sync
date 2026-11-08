@@ -8,8 +8,10 @@ use App\Controllers\AdminHistoriqueController;
 use App\Controllers\AdminNotificationController;
 use App\Controllers\AdminUserController;
 use App\Controllers\AdminStudentController;
+use App\Controllers\AdminDepartementController;
 use App\Controllers\AdminEnseignantController;
 use App\Controllers\AdminSalleController;
+use App\Controllers\AdminAnneeController;
 use App\Middleware\Auth;
 use App\Middleware\CsrfGuard;
 
@@ -43,6 +45,13 @@ $adminRouter->get('/admin/notifications/nouveau',          [AdminNotificationCon
 $adminRouter->post('/admin/notifications',                 [AdminNotificationController::class, 'store'],   $adminPost);
 $adminRouter->post('/admin/notifications/{id}/supprimer',  [AdminNotificationController::class, 'destroy'], $adminPost);
 
+// admin - departement
+$adminRouter->get('/admin/departements',                [AdminDepartementController::class, 'index'],  $admin);
+$adminRouter->get('/admin/departements/nouveau',        [AdminDepartementController::class, 'create'], $admin);
+$adminRouter->post('/admin/departements',               [AdminDepartementController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/departements/{id}/modifier',  [AdminDepartementController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/departements/{id}',          [AdminDepartementController::class, 'update'], $adminPost);
+
 // admin - Enseignant
 $adminRouter->get('/admin/enseignants',                [AdminEnseignantController::class, 'index'],  $admin);
 $adminRouter->get('/admin/enseignants/nouveau',        [AdminEnseignantController::class, 'create'], $admin);
@@ -56,5 +65,12 @@ $adminRouter->get('/admin/salles/nouveau',        [AdminSalleController::class, 
 $adminRouter->post('/admin/salles',               [AdminSalleController::class, 'store'],  $adminPost);
 $adminRouter->get('/admin/salles/{id}/modifier',  [AdminSalleController::class, 'edit'],   $admin);
 $adminRouter->post('/admin/salles/{id}',          [AdminSalleController::class, 'update'], $adminPost);
+
+// admin - annee universitaire
+$adminRouter->get('/admin/annees',                [AdminAnneeController::class, 'index'],  $admin);
+$adminRouter->get('/admin/annees/nouveau',        [AdminAnneeController::class, 'create'], $admin);
+$adminRouter->post('/admin/annees',               [AdminAnneeController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/annees/{id}/modifier',  [AdminAnneeController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/annees/{id}',          [AdminAnneeController::class, 'update'], $adminPost);
 
 return $adminRouter;
