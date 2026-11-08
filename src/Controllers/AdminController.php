@@ -14,6 +14,7 @@ class AdminController {
     ['utilisateurs', 'Utilisateurs',          '/admin/utilisateurs'],
     ['etudiants',    'Étudiants',             '/admin/etudiants'],
     ['enseignants',  'Enseignants',           '/admin/enseignants'],
+    ['departements', 'Départements',          '/admin/departements'],
     ['formations',   'Formations et filières', null],
     ['annee',        'Année universitaire',   null],
     ['salles',       'Salles',                null],

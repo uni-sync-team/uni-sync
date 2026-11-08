@@ -23,11 +23,28 @@ class Departement
   }
 
   /** All departments, ordered by name (used by the teacher form select). */
-  public static function findAll(): array
+  // OLD VERSION
+  public static function _findAll(): array
   {
     return Database::connect()
       ->query('SELECT idDepartement, nom, description FROM departement ORDER BY nom')
       ->fetchAll();
+  }
+
+  public static function findAll(?string $q = null, int $limit = 50) {
+    $sql = "
+      SELECT idDepartement, nom, description
+      FROM departement
+      ";
+    $params = [];
+    if ($q !== null && $q !== '') {
+      $sql .= ' WHERE nom LIKE :q';
+      $params = ['q' => "%$q%"];
+    }
+    $stmt = Database::connect()->prepare($sql . ' ORDER BY nom LIMIT ' . (int) $limit);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll();
   }
 
   public static function create(array $data): int
