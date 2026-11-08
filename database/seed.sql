@@ -91,3 +91,81 @@ FROM utilisateur;
 INSERT INTO salle (nom, capacite, typeSalle) VALUES
   ('Salle 101',   40,  'Salle de cours'),
   ('Amphi A',     200, 'Amphithéâtre');
+
+
+INSERT INTO note (idEtudiant, idEvaluation, valeur, session)
+SELECT e.idEtudiant, ev.idEvaluation, 11.50, 'NORMALE'
+FROM etudiant e
+JOIN module m      ON m.code = 'INF102'
+JOIN evaluation ev ON ev.idModule = m.idModule AND ev.type = 'Examen final'
+WHERE e.cne = 'CNE_T002'
+ON DUPLICATE KEY UPDATE valeur = VALUES(valeur);
+
+
+INSERT INTO note (idEtudiant, idEvaluation, valeur, session)
+SELECT e.idEtudiant, ev.idEvaluation, 13.00, 'RATTRAPAGE'
+FROM etudiant e
+JOIN module m      ON m.code = 'INF102'
+JOIN evaluation ev ON ev.idModule = m.idModule AND ev.type = 'Examen final'
+WHERE e.cne = 'CNE_T001'
+ON DUPLICATE KEY UPDATE valeur = VALUES(valeur);
+
+
+INSERT INTO note (idEtudiant, idEvaluation, valeur, session)
+SELECT e.idEtudiant, ev.idEvaluation, v.valeur, 'NORMALE'
+FROM (
+  SELECT 'INF101' AS code, 'Contrôle continu' AS type, 16.00 AS valeur UNION ALL
+  SELECT 'INF101', 'Examen final',     15.00 UNION ALL
+  SELECT 'INF102', 'Examen final',     13.50
+) v
+JOIN etudiant e    ON e.cne = 'CNE0000001'
+JOIN module m      ON m.code = v.code
+JOIN evaluation ev ON ev.idModule = m.idModule AND ev.type = v.type
+ON DUPLICATE KEY UPDATE valeur = VALUES(valeur);
+
+
+INSERT INTO resultatSemestre (idEtudiant, idSemestre, moyenne, decision)
+SELECT e.idEtudiant,
+       (SELECT s.idSemestre FROM semestre s
+         JOIN formation f ON f.idFormation = s.idFormation
+        WHERE f.intitule = 'Licence en Génie Informatique' AND s.numero = 1),
+       v.moyenne, v.decision
+FROM (
+  SELECT 'CNE_T001' AS cne, 10.83 AS moyenne, 'VALIDE'     AS decision UNION ALL
+  SELECT 'CNE_T002',         9.58,            'NON_VALIDE'             UNION ALL
+  SELECT 'CNE0000001',      14.42,            'VALIDE'
+) v
+JOIN etudiant e ON e.cne = v.cne
+ON DUPLICATE KEY UPDATE moyenne = VALUES(moyenne), decision = VALUES(decision);
+
+INSERT INTO seance (idModule, idEnseignant, idSalle, dateDebut, dateFin, typeSeance)
+SELECT m.idModule,
+       (SELECT idEnseignant FROM enseignant WHERE nom = 'Test' AND prenom = 'Prof' LIMIT 1),
+       (SELECT idSalle FROM salle WHERE nom = v.salle LIMIT 1),
+       v.debut, v.fin, v.type
+FROM (
+  SELECT 'INF101' AS code, 'Amphi A'   AS salle, '2026-11-09 08:30:00' AS debut, '2026-11-09 10:30:00' AS fin, 'Cours' AS type UNION ALL
+  SELECT 'INF101',         'Salle 101',          '2026-11-09 10:45:00',          '2026-11-09 12:45:00',        'TD'            UNION ALL
+  SELECT 'INF102',         'Amphi A',            '2026-11-10 08:30:00',          '2026-11-10 10:30:00',        'Cours'         UNION ALL
+  SELECT 'INF102',         'Salle 101',          '2026-11-10 14:00:00',          '2026-11-10 16:00:00',        'TP'            UNION ALL
+  SELECT 'IA101',          'Amphi A',            '2026-11-11 09:00:00',          '2026-11-11 11:00:00',        'Cours'         UNION ALL
+  SELECT 'IA101',          'Salle 101',          '2026-11-12 10:00:00',          '2026-11-12 12:00:00',        'TD'            UNION ALL
+  SELECT 'MAT101',         'Amphi A',            '2026-11-13 08:30:00',          '2026-11-13 10:30:00',        'Cours'
+) v
+JOIN module m ON m.code = v.code;
+
+INSERT INTO evaluation (idModule, type, dateEvaluation, bareme, coefficient)
+SELECT m.idModule, v.type, v.date, v.bareme, v.coef
+FROM (
+  SELECT 'IA101'  AS code, 'Contrôle continu' AS type, '2026-11-16' AS date, 20 AS bareme, 1 AS coef UNION ALL
+  SELECT 'IA101',          'Examen final',            '2027-01-18',         20,            2        UNION ALL
+  SELECT 'IA102',          'TP',                      '2026-12-02',         20,            1        UNION ALL
+  SELECT 'IA102',          'Examen final',            '2027-01-20',         20,            2        UNION ALL
+  SELECT 'MAT101',         'Contrôle continu',        '2026-11-20',         20,            1        UNION ALL
+  SELECT 'MAT101',         'Examen final',            '2027-01-22',         20,            2        UNION ALL
+  SELECT 'MAT102',         'Contrôle continu',        '2026-11-25',         10,            1        UNION ALL
+  SELECT 'MAT102',         'Examen final',            '2027-01-25',         20,            2        UNION ALL
+  SELECT 'INF101',         'Rattrapage',              '2027-02-15',         20,            2        UNION ALL
+  SELECT 'INF102',         'TP',                      '2026-12-05',         20,            1
+) v
+JOIN module m ON m.code = v.code;

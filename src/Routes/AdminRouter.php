@@ -12,6 +12,11 @@ use App\Controllers\AdminDepartementController;
 use App\Controllers\AdminEnseignantController;
 use App\Controllers\AdminSalleController;
 use App\Controllers\AdminAnneeController;
+use App\Controllers\AdminFiliereController;
+use App\Controllers\AdminFormationController;
+use App\Controllers\AdminSeanceController;
+use App\Controllers\AdminExamenController;
+use App\Controllers\AdminResultatController;
 use App\Middleware\Auth;
 use App\Middleware\CsrfGuard;
 
@@ -72,5 +77,42 @@ $adminRouter->get('/admin/annees/nouveau',        [AdminAnneeController::class, 
 $adminRouter->post('/admin/annees',               [AdminAnneeController::class, 'store'],  $adminPost);
 $adminRouter->get('/admin/annees/{id}/modifier',  [AdminAnneeController::class, 'edit'],   $admin);
 $adminRouter->post('/admin/annees/{id}',          [AdminAnneeController::class, 'update'], $adminPost);
+
+// admin - filiere
+$adminRouter->get('/admin/filieres',                [AdminFiliereController::class, 'index'],  $admin);
+$adminRouter->get('/admin/filieres/nouveau',        [AdminFiliereController::class, 'create'], $admin);
+$adminRouter->post('/admin/filieres',               [AdminFiliereController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/filieres/{id}/modifier',  [AdminFiliereController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/filieres/{id}',          [AdminFiliereController::class, 'update'], $adminPost);
+
+// admin - formation 
+$adminRouter->get('/admin/formations',                  [AdminFormationController::class, 'index'],         $admin);
+$adminRouter->get('/admin/formations/nouveau',          [AdminFormationController::class, 'create'],        $admin);
+$adminRouter->post('/admin/formations',                 [AdminFormationController::class, 'store'],         $adminPost);
+$adminRouter->get('/admin/formations/{id}/modifier',    [AdminFormationController::class, 'edit'],          $admin);
+$adminRouter->post('/admin/formations/{id}',            [AdminFormationController::class, 'update'],        $adminPost);
+$adminRouter->post('/admin/formations/{id}/semestres',  [AdminFormationController::class, 'storeSemestre'], $adminPost);
+
+// admin - seance
+$adminRouter->get('/admin/seances',                 [AdminSeanceController::class, 'index'],   $admin);
+$adminRouter->get('/admin/seances/nouveau',         [AdminSeanceController::class, 'create'],  $admin);
+$adminRouter->post('/admin/seances',                [AdminSeanceController::class, 'store'],   $adminPost);
+$adminRouter->get('/admin/seances/{id}/modifier',   [AdminSeanceController::class, 'edit'],    $admin);
+$adminRouter->post('/admin/seances/{id}',           [AdminSeanceController::class, 'update'],  $adminPost);
+$adminRouter->post('/admin/seances/{id}/supprimer', [AdminSeanceController::class, 'destroy'], $adminPost);
+
+// admin - examen
+$adminRouter->get('/admin/examens',                 [AdminExamenController::class, 'index'],   $admin);
+$adminRouter->get('/admin/examens/nouveau',         [AdminExamenController::class, 'create'],  $admin);
+$adminRouter->post('/admin/examens',                [AdminExamenController::class, 'store'],   $adminPost);
+$adminRouter->get('/admin/examens/{id}/modifier',   [AdminExamenController::class, 'edit'],    $admin);
+$adminRouter->post('/admin/examens/{id}',           [AdminExamenController::class, 'update'],  $adminPost);
+$adminRouter->post('/admin/examens/{id}/supprimer', [AdminExamenController::class, 'destroy'], $adminPost);
+
+// admin - resultats 
+$adminRouter->get('/admin/resultats',                [AdminResultatController::class, 'index'],     $admin);
+$adminRouter->post('/admin/resultats/calculer',      [AdminResultatController::class, 'calculer'],  $adminPost);
+$adminRouter->get('/admin/resultats/examens/{id}',   [AdminResultatController::class, 'notes'],     $admin);
+$adminRouter->post('/admin/resultats/examens/{id}',  [AdminResultatController::class, 'saveNotes'], $adminPost);
 
 return $adminRouter;

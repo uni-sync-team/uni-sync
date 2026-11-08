@@ -352,3 +352,95 @@ legend {
         grid-template-columns: 1fr
     }
 }
+
+/* ===== Formations, séances, examens, résultats ===== */
+.admin input[type=number],
+.admin input[type=datetime-local],
+.admin textarea {
+    width: 100%;
+    padding: 12px 14px;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    margin-bottom: 18px
+}
+
+.field input[type=number],
+.field input[type=datetime-local] {
+    margin-bottom: 0
+}
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 18px;
+    flex-wrap: wrap
+}
+
+.tabs a {
+    padding: 8px 18px;
+    border: 2px solid var(--ink);
+    border-radius: 999px;
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 700
+}
+
+.tabs a[aria-current=page] {
+    background: var(--ink);
+    color: var(--cream)
+}
+
+.filter-row {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    margin-bottom: 16px
+}
+
+.filter-row > div {
+    min-width: 160px;
+    flex: 1
+}
+
+.filter-row select,
+.filter-row input {
+    margin-bottom: 0
+}
+
+.tbl .num {
+    text-align: right;
+    white-space: nowrap
+}
+
+.tbl input.note {
+    width: 110px;
+    margin: 0;
+    padding: 8px 10px;
+    text-align: right
+}
+
+.tbl td .err {
+    margin: 4px 0 0
+}
+
+.inline-form {
+    display: inline
+}
+
+.linklike {
+    background: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    color: #8a2d1f;
+    text-decoration: underline;
+    cursor: pointer
+}
+
+.panel.full {
+    max-width: none
+}

@@ -169,4 +169,57 @@ class Evaluation
              FROM note WHERE idEvaluation = ?", [$idEvaluation]
         )->fetch();
     }
+
+    public const TYPES = ['Contrôle continu', 'TP', 'Examen final', 'Rattrapage'];
+
+    private const DETAIL_SELECT = "SELECT ev.*, m.code AS moduleCode, m.intitule AS module,
+                                          m.idSemestre, s.idFormation, f.intitule AS formation,
+                                          (SELECT COUNT(*) FROM note n WHERE n.idEvaluation = ev.idEvaluation) AS nbNotes
+                                   FROM evaluation ev
+                                   JOIN module m    ON m.idModule    = ev.idModule
+                                   JOIN semestre s  ON s.idSemestre  = m.idSemestre
+                                   JOIN formation f ON f.idFormation = s.idFormation";
+
+    /** Evaluations with module / formation labels, newest first. Optional filters: module, type. */
+    public function findAllDetailed(int $idModule = 0, string $type = ''): array
+    {
+        $sql = self::DETAIL_SELECT . " WHERE 1 = 1";
+        $params = [];
+        if ($idModule > 0) {
+            $sql .= " AND ev.idModule = ?";
+            $params[] = $idModule;
+        }
+        if ($type !== '') {
+            $sql .= " AND ev.type = ?";
+            $params[] = $type;
+        }
+        return $this->query($sql . " ORDER BY ev.dateEvaluation DESC, ev.idEvaluation DESC", $params)->fetchAll();
+    }
+
+    public function findDetailed(int $id): ?array
+    {
+        $row = $this->query(self::DETAIL_SELECT . " WHERE ev.idEvaluation = ?", [$id])->fetch();
+        return $row ?: null;
+    }
+
+    /**
+     * Grading sheet: every student validly enrolled in the evaluation's formation,
+     * with their current grade (if any) for the given session.
+     */
+    public function getFeuilleNotes(int $idEvaluation, string $session = 'NORMALE'): array
+    {
+        return $this->query(
+            "SELECT DISTINCT e.idEtudiant, e.cne, e.nom, e.prenom, n.valeur
+             FROM evaluation ev
+             JOIN module m      ON m.idModule   = ev.idModule
+             JOIN semestre s    ON s.idSemestre = m.idSemestre
+             JOIN inscription i ON i.idFormation = s.idFormation AND i.statut = 'VALIDEE'
+             JOIN etudiant e    ON e.idEtudiant = i.idEtudiant
+             LEFT JOIN note n   ON n.idEvaluation = ev.idEvaluation
+                               AND n.idEtudiant = e.idEtudiant AND n.session = ?
+             WHERE ev.idEvaluation = ?
+             ORDER BY e.nom, e.prenom",
+            [$session, $idEvaluation]
+        )->fetchAll();
+    }
 }
