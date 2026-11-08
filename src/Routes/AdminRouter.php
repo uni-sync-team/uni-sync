@@ -9,6 +9,7 @@ use App\Controllers\AdminNotificationController;
 use App\Controllers\AdminUserController;
 use App\Controllers\AdminStudentController;
 use App\Controllers\AdminEnseignantController;
+use App\Controllers\AdminSalleController;
 use App\Middleware\Auth;
 use App\Middleware\CsrfGuard;
 
@@ -48,5 +49,12 @@ $adminRouter->get('/admin/enseignants/nouveau',        [AdminEnseignantControlle
 $adminRouter->post('/admin/enseignants',               [AdminEnseignantController::class, 'store'],  $adminPost);
 $adminRouter->get('/admin/enseignants/{id}/modifier',  [AdminEnseignantController::class, 'edit'],   $admin);
 $adminRouter->post('/admin/enseignants/{id}',          [AdminEnseignantController::class, 'update'], $adminPost);
+
+// admin - salle
+$adminRouter->get('/admin/salles',                [AdminSalleController::class, 'index'],  $admin);
+$adminRouter->get('/admin/salles/nouveau',        [AdminSalleController::class, 'create'], $admin);
+$adminRouter->post('/admin/salles',               [AdminSalleController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/salles/{id}/modifier',  [AdminSalleController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/salles/{id}',          [AdminSalleController::class, 'update'], $adminPost);
 
 return $adminRouter;
