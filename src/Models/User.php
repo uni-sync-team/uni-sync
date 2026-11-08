@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Core\Database;
-use PDO;
 
 class User {
   //Session stores one role so we pick by this order
@@ -41,7 +40,7 @@ class User {
        ORDER BY r.idRole'
     );
     $stmt->execute(['id' => $idUser]);
-    return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    return $stmt->fetchAll(\PDO::FETCH_COLUMN);
   }
   //returns the user without the password hash if the credentials are valid and the account is active
   public static function verifyCredentials(string $login, string $password): ?array
@@ -136,9 +135,7 @@ class User {
     try {
       $pdo->prepare('INSERT INTO utilisateur (login, email, motDePasse) VALUES (:l, :e, :p)')
           ->execute(['l' => $login, 'e' => $email, 'p' => password_hash($password, PASSWORD_DEFAULT)]);
-      $id = (int) $pdo->lastInsertId();
-      $pdo->prepare('INSERT INTO userRole (idUser, idRole) SELECT :id, idRole FROM role WHERE nom = :role')
-          ->execute(['id' => $id, 'role' => $role]);
+      $id = (int) $pdo->lastInsertId(); $pdo->prepare('INSERT INTO userRole (idUser, idRole) SELECT :id, idRole FROM role WHERE nom = :role') ->execute(['id' => $id, 'role' => $role]);
       $pdo->commit();
       return $id;
     } catch (\Throwable $e) {
