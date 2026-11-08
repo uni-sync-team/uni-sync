@@ -12,7 +12,7 @@ class AdminController {
   private const SECTIONS = [
     ['dashboard',    'Tableau de bord',       '/admin'],
     ['utilisateurs', 'Utilisateurs',          '/admin/utilisateurs'],
-    ['etudiants',    'Étudiants',             null],
+    ['etudiants',    'Étudiants',             '/admin/etudiants'],
     ['enseignants',  'Enseignants',           null],
     ['formations',   'Formations et filières', null],
     ['annee',        'Année universitaire',   null],

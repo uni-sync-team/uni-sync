@@ -80,5 +80,5 @@ INSERT INTO enseignant (idDepartement, idUser, nom, prenom, grade)
 SELECT (SELECT idDepartement FROM departement WHERE nom = 'Informatique'), idUser, 'Test', 'Prof', 'Professeur'
 FROM utilisateur WHERE login = 'prof';
 
-INSERT INTO etudiant (idUser, cne, nom, prenom)
-SELECT idUser, 'CNE0000001', 'Test', 'Etudiant' FROM utilisateur WHERE login = 'etudiant';
+INSERT INTO etudiant (idUser, cne, nom, prenom, telephone, dateNaissance)
+SELECT idUser, 'CNE0000001', 'Test', 'Etudiant', '0623974921', CURRENT_DATE FROM utilisateur WHERE login = 'etudiant';

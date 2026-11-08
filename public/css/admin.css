@@ -254,3 +254,101 @@
         padding: 24px 18px
     }
 }
+
+/* style every text-like input the same way as select/search */
+.admin input[type=text],
+.admin input[type=email],
+.admin input[type=password],
+.admin input[type=tel],
+.admin input[type=date] {
+    width: 100%;
+    padding: 12px 14px;
+    font: inherit;
+    color: var(--ink);
+    background: #fff;
+    border: 2px solid var(--ink);
+    border-radius: 14px;
+    margin-bottom: 18px
+}
+
+.admin input:focus,
+.admin select:focus {
+    outline: 3px solid var(--sage);
+    outline-offset: 2px
+}
+
+.admin input[readonly] {
+    background: var(--sand);
+    cursor: not-allowed
+}
+
+.admin label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 6px
+}
+
+.admin .check {
+    display: flex
+}
+
+.muted {
+    font-weight: 400;
+    opacity: .7
+}
+
+.panel.wide {
+    max-width: 760px
+}
+
+fieldset {
+    border: 0;
+    padding: 0;
+    margin: 0 0 8px
+}
+
+legend {
+    font-family: var(--display);
+    font-size: 1.15rem;
+    padding: 0 0 12px;
+    margin-bottom: 14px;
+    border-bottom: 2px solid var(--sand);
+    width: 100%
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 18px
+}
+
+.form-grid .full {
+    grid-column: 1 / -1
+}
+
+/* spacing is handled by the grid wrapper, so reset the inner margins */
+.field input,
+.field select {
+    margin-bottom: 0
+}
+
+.field {
+    margin-bottom: 18px
+}
+
+.field .err {
+    margin: 6px 0 0
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 8px
+}
+
+@media(max-width:600px) {
+    .form-grid {
+        grid-template-columns: 1fr
+    }
+}
