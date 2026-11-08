@@ -23,8 +23,8 @@ class AdminController {
     ['demandes',     'Demandes administratives', null],
     ['reclamations', 'Réclamations',          null],
     ['annonces',     'Annonces',              null],
-    ['notifications', 'Notifications',        null],
-    ['historique',   'Historique des actions', null],
+    ['notifications', 'Notifications',        '/admin/notifications'],
+    ['historique',   'Historique des actions', '/admin/historique'],
   ];
 
   public static function dashboard(): void

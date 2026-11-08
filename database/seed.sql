@@ -82,3 +82,8 @@ FROM utilisateur WHERE login = 'prof';
 
 INSERT INTO etudiant (idUser, cne, nom, prenom, telephone, dateNaissance)
 SELECT idUser, 'CNE0000001', 'Test', 'Etudiant', '0623974921', CURRENT_DATE FROM utilisateur WHERE login = 'etudiant';
+
+-- Notifications d'exemple
+INSERT INTO notification (idUser, message, lu)
+SELECT idUser, 'Bienvenue sur UniSync. Votre compte est prêt.', IF(login = 'etudiant', 1, 0)
+FROM utilisateur;
