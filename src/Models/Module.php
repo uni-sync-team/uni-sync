@@ -180,4 +180,16 @@ class Module
              ORDER BY e.nom, e.prenom", [$idModule]
         )->fetchAll();
     }
+
+    /** Every module with its semester and formation labels (used by select lists). */
+    public function findAllWithContext(): array
+    {
+        return $this->query(
+            "SELECT m.idModule, m.code, m.intitule, s.libelle AS semestre, f.intitule AS formation
+             FROM module m
+             JOIN semestre s  ON s.idSemestre  = m.idSemestre
+             JOIN formation f ON f.idFormation = s.idFormation
+             ORDER BY f.intitule, s.numero, m.code"
+        )->fetchAll();
+    }
 }
