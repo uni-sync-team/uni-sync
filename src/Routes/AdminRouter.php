@@ -9,6 +9,7 @@ use App\Controllers\AdminNotificationController;
 use App\Controllers\AdminUserController;
 use App\Controllers\AdminStudentController;
 use App\Controllers\AdminDepartementController;
+use App\Controllers\AdminEnseignantController;
 use App\Middleware\Auth;
 use App\Middleware\CsrfGuard;
 
@@ -48,5 +49,12 @@ $adminRouter->get('/admin/departements/nouveau',        [AdminDepartementControl
 $adminRouter->post('/admin/departements',               [AdminDepartementController::class, 'store'],  $adminPost);
 $adminRouter->get('/admin/departements/{id}/modifier',  [AdminDepartementController::class, 'edit'],   $admin);
 $adminRouter->post('/admin/departements/{id}',          [AdminDepartementController::class, 'update'], $adminPost);
+
+// admin - Enseignant
+$adminRouter->get('/admin/enseignants',                [AdminEnseignantController::class, 'index'],  $admin);
+$adminRouter->get('/admin/enseignants/nouveau',        [AdminEnseignantController::class, 'create'], $admin);
+$adminRouter->post('/admin/enseignants',               [AdminEnseignantController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/enseignants/{id}/modifier',  [AdminEnseignantController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/enseignants/{id}',          [AdminEnseignantController::class, 'update'], $adminPost);
 
 return $adminRouter;

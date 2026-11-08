@@ -50,8 +50,9 @@ class Etudiant {
 
   public static function findAll(?string $q = null, int $limit = 100): array
   {
-    $sql = 'SELECT e.idEtudiant, e.idUser, e.cne, e.nom, e.prenom, e.dateNaissance, e.telephone
-            FROM etudiant e';
+    $sql = 'SELECT e.idEtudiant, e.idUser, e.cne, e.nom, e.prenom, e.dateNaissance, e.telephone, u.actif
+            FROM etudiant e
+            JOIN utilisateur u ON u.idUser = e.idUser';
     $params = [];
     if ($q !== null && $q !== '') {
       $sql .= ' WHERE e.nom LIKE :q1 OR e.prenom LIKE :q2';
