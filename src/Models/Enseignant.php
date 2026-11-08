@@ -2,17 +2,26 @@
 namespace App\Models;
  
 use App\Core\Database;
-use PDO;
+
 class Enseignant {
   private const COLUMNS = ['idDepartement', 'idUser', 'nom', 'prenom', 'grade'];
+
+  // fixed grades of the professor
+  public const GRADES = [
+    'Professeur de l\'Enseignement Supérieur',
+    'Professeur Habilité',
+    'Professeur Assistant',
+    'Vacataire',
+  ];
 
   public static function findById(int $id): ?array
   {
     $stmt = Database::connect()->prepare(
       'SELECT e.idEnseignant, e.idDepartement, e.idUser, e.nom, e.prenom, e.grade,
-              d.nom AS departement
+              d.nom AS departement, u.actif
        FROM enseignant e
        JOIN departement d ON d.idDepartement = e.idDepartement
+       JOIN utilisateur u ON u.idUser = e.idUser
        WHERE e.idEnseignant = :id
        LIMIT 1'
     );
@@ -39,7 +48,8 @@ class Enseignant {
   }
 
   /** All teachers with department and account info, ordered by name. */
-  public static function findAll(): array
+  // NOTE: OLD VERSION
+  public static function _findAll(): array
   {
     return Database::connect()->query(
       'SELECT e.idEnseignant, e.idDepartement, e.idUser, e.nom, e.prenom, e.grade,
@@ -49,6 +59,24 @@ class Enseignant {
        JOIN utilisateur u ON u.idUser = e.idUser
        ORDER BY e.nom, e.prenom'
     )->fetchAll();
+  }
+
+  public static function findAll(?string $q = null, int $limit = 100): array
+  {
+    $sql = 'SELECT e.idEnseignant, e.idDepartement, e.idUser, e.nom, e.prenom, e.grade,
+                  d.nom AS departement, u.login, u.email, u.actif
+            FROM enseignant e
+            JOIN departement d ON d.idDepartement = e.idDepartement
+            JOIN utilisateur u ON u.idUser = e.idUser';
+    $params = [];
+    if ($q !== null && $q !== '') {
+      $sql .= ' WHERE e.nom LIKE :q1 OR e.prenom LIKE :q2';
+      $params = ['q1' => "%$q%", 'q2' => "%$q%"];
+    }
+    $stmt = Database::connect()->prepare($sql . ' ORDER BY e.nom, e.prenom LIMIT ' . (int) $limit);
+    $stmt->execute($params);
+
+    return $stmt->fetchAll();
   }
 
   public static function findByDepartement(int $idDepartement): array
@@ -84,7 +112,8 @@ class Enseignant {
   }
 
   /** Updates only the columns present in $data (idDepartement, idUser, nom, prenom, grade). */
-  public static function update(int $id, array $data): bool
+  // NOTE: OLD VERSION
+  public static function _update(int $id, array $data): bool
   {
     $data = array_intersect_key($data, array_flip(self::COLUMNS));
     if (!$data) {
@@ -97,6 +126,100 @@ class Enseignant {
 
     return $stmt->rowCount() > 0;
   }
+
+  public static function update(int $id, array $data, bool $actif): bool
+  {
+    $data = array_intersect_key($data, array_flip(self::COLUMNS));
+    if (!$data) {
+      return false;
+    }
+
+    $pdo = Database::connect();
+    $pdo->beginTransaction();
+
+    try {
+      $set  = implode(', ', array_map(fn($c) => "$c = :$c", array_keys($data)));
+      $stmt = $pdo->prepare("UPDATE enseignant SET $set WHERE idEnseignant = :id");
+      $stmt->execute($data + ['id' => $id]);
+
+      $stmt = $pdo->prepare("
+        UPDATE utilisateur u
+        JOIN enseignant e ON e.idUser = u.idUser
+        SET u.actif = :actif
+        WHERE e.idEnseignant = :id
+      ");
+      $stmt->execute(['actif' => (int) $actif, 'id' => $id]);
+
+      $pdo->commit();
+      return true;
+    } catch (\PDOException) {
+      $pdo->rollBack();
+      return false;
+    }
+  }
+
+  public static function createWithUser(array $d): int
+  {
+    $pdo = Database::connect();
+    $pdo->beginTransaction();
+
+    try {
+      $stmt = $pdo->prepare("
+        INSERT INTO utilisateur (login, email, motDePasse)
+        VALUES (:login, :email, :pwd)
+      ");
+      $stmt->execute([
+        'login' => $d['login'],
+        'email' => $d['email'],
+        'pwd'   => password_hash($d['password'], PASSWORD_DEFAULT),
+      ]);
+      $idUser = (int) $pdo->lastInsertId();
+
+      $stmt = $pdo->prepare("
+        INSERT INTO userRole (idUser, idRole)
+        SELECT :idUser, idRole FROM role WHERE nom = 'prof'
+      ");
+      $stmt->execute(['idUser' => $idUser]);
+
+      if ($stmt->rowCount() === 0) {
+        throw new \RuntimeException("Le rôle 'enseignant' n'existe pas dans la table role.");
+      }
+
+      $stmt = $pdo->prepare("
+        INSERT INTO enseignant (idDepartement, idUser, nom, prenom, grade)
+        VALUES (:idDepartement, :idUser, :nom, :prenom, :grade)
+      ");
+      $stmt->execute([
+        'idDepartement' => $d['idDepartement'],
+        'idUser'        => $idUser,
+        'nom'           => $d['nom'],
+        'prenom'        => $d['prenom'],
+        'grade'         => $d['grade'],
+      ]);
+      $idEnseignant = (int) $pdo->lastInsertId();
+
+      $pdo->commit();
+      return $idEnseignant;
+    } catch (\Throwable $e) {
+      $pdo->rollBack();
+      throw $e;
+    }
+  }
+
+  // public static function departements(): array
+  // {
+  //   return Database::connect()
+  //     ->query('SELECT idDepartement, nom FROM departement ORDER BY nom')
+  //     ->fetchAll();
+  // }
+  //
+  // public static function departementExists(int $idDepartement): bool
+  // {
+  //   $stmt = Database::connect()->prepare('SELECT 1 FROM departement WHERE idDepartement = ? LIMIT 1');
+  //   $stmt->execute([$idDepartement]);
+  //
+  //   return (bool) $stmt->fetchColumn();
+  // }
 
   public static function delete(int $id): bool
   {

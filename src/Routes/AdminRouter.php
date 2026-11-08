@@ -8,6 +8,7 @@ use App\Controllers\AdminHistoriqueController;
 use App\Controllers\AdminNotificationController;
 use App\Controllers\AdminUserController;
 use App\Controllers\AdminStudentController;
+use App\Controllers\AdminEnseignantController;
 use App\Middleware\Auth;
 use App\Middleware\CsrfGuard;
 
@@ -40,5 +41,12 @@ $adminRouter->get('/admin/notifications',                  [AdminNotificationCon
 $adminRouter->get('/admin/notifications/nouveau',          [AdminNotificationController::class, 'create'],  $admin);
 $adminRouter->post('/admin/notifications',                 [AdminNotificationController::class, 'store'],   $adminPost);
 $adminRouter->post('/admin/notifications/{id}/supprimer',  [AdminNotificationController::class, 'destroy'], $adminPost);
+
+// admin - Enseignant
+$adminRouter->get('/admin/enseignants',                [AdminEnseignantController::class, 'index'],  $admin);
+$adminRouter->get('/admin/enseignants/nouveau',        [AdminEnseignantController::class, 'create'], $admin);
+$adminRouter->post('/admin/enseignants',               [AdminEnseignantController::class, 'store'],  $adminPost);
+$adminRouter->get('/admin/enseignants/{id}/modifier',  [AdminEnseignantController::class, 'edit'],   $admin);
+$adminRouter->post('/admin/enseignants/{id}',          [AdminEnseignantController::class, 'update'], $adminPost);
 
 return $adminRouter;

@@ -1,4 +1,4 @@
-<?php use App\Core\View; use App\Models\Etudiant; ?>
+<?php use App\Core\View; ?>
 <h1>Etudiants</h1>
 
 <div class="bar">
@@ -18,12 +18,12 @@
   <tbody>
 <?php foreach ($etudiants as $u): ?>
     <tr>
-      <td><?= View::e($u['nom']) ?><?= (int) $u['idEtudiant'] === $me ? ' <small>(vous)</small>' : '' ?></td>
+      <td><?= View::e($u['nom']) ?></td>
       <td><?= View::e($u['prenom']) ?></td>
       <td><?= View::e($u['cne'] ?? '—') ?></td>
-      <td><?= $u['dateNaissance'] ?: 'Unknown' ?></span></td>
+      <td><?= View::e($u['dateNaissance']) ?: '-' ?></td>
       <td><?= View::e($u['telephone'] ?: '—') ?></td>
-      <td><span class="badge<?= Etudiant::isActive($u['idEtudiant']) ? '' : ' off' ?>"><?=  Etudiant::isActive($u['idEtudiant'])? 'Actif' : 'Désactivé' ?></span></td>
+      <td><span class="badge<?= $u['actif'] ? '' : ' off' ?>"><?=  $u['actif']? 'Actif' : 'Désactivé' ?></span></td>
       <td><a href="/admin/etudiants/<?= (int) $u['idEtudiant'] ?>/modifier">Modifier</a></td>
     </tr>
 <?php endforeach; ?>
