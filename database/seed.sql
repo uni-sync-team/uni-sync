@@ -87,3 +87,7 @@ SELECT idUser, 'CNE0000001', 'Test', 'Etudiant', '0623974921', CURRENT_DATE FROM
 INSERT INTO notification (idUser, message, lu)
 SELECT idUser, 'Bienvenue sur UniSync. Votre compte est prêt.', IF(login = 'etudiant', 1, 0)
 FROM utilisateur;
+
+INSERT INTO salle (nom, capacite, typeSalle) VALUES
+  ('Salle 101',   40,  'Salle de cours'),
+  ('Amphi A',     200, 'Amphithéâtre');
