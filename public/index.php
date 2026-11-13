@@ -15,8 +15,8 @@ Session::start();
 
 $router = new Router();
 
-// One landing page per role (to be replaced by real dashboards)
-foreach (['etudiant' => 'Étudiant', 'prof' => 'Enseignant'] as $role => $label) {
+// Landing page for the teacher (the student and admin spaces have their own routers)
+foreach (['prof' => 'Enseignant'] as $role => $label) {
   $router->get("/$role", function () use ($label) {
     View::render('espace', ['label' => $label]);
   }, [fn() => Auth::requireRole($role)]);

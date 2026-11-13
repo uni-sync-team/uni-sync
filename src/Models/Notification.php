@@ -111,4 +111,51 @@ class Notification {
 
     return $stmt->rowCount() > 0;
   }
+
+  // ----- user inbox (student / teacher side) -----
+
+  public static function forUser(int $idUser, int $limit, int $offset = 0): array
+  {
+    $stmt = Database::connect()->prepare(
+      'SELECT idNotification, message, dateCreation, lu FROM notification
+       WHERE idUser = :id ORDER BY dateCreation DESC, idNotification DESC
+       LIMIT ' . (int) $limit . ' OFFSET ' . (int) $offset
+    );
+    $stmt->execute(['id' => $idUser]);
+
+    return $stmt->fetchAll();
+  }
+
+  public static function countForUser(int $idUser): int
+  {
+    $stmt = Database::connect()->prepare('SELECT COUNT(*) FROM notification WHERE idUser = :id');
+    $stmt->execute(['id' => $idUser]);
+
+    return (int) $stmt->fetchColumn();
+  }
+
+  public static function countUnread(int $idUser): int
+  {
+    $stmt = Database::connect()->prepare('SELECT COUNT(*) FROM notification WHERE idUser = :id AND lu = 0');
+    $stmt->execute(['id' => $idUser]);
+
+    return (int) $stmt->fetchColumn();
+  }
+
+  /** Marks one notification as read, only if it belongs to the user. */
+  public static function markRead(int $id, int $idUser): bool
+  {
+    $stmt = Database::connect()->prepare('UPDATE notification SET lu = 1 WHERE idNotification = :id AND idUser = :u AND lu = 0');
+    $stmt->execute(['id' => $id, 'u' => $idUser]);
+
+    return $stmt->rowCount() > 0;
+  }
+
+  public static function markAllRead(int $idUser): int
+  {
+    $stmt = Database::connect()->prepare('UPDATE notification SET lu = 1 WHERE idUser = :u AND lu = 0');
+    $stmt->execute(['u' => $idUser]);
+
+    return $stmt->rowCount();
+  }
 }

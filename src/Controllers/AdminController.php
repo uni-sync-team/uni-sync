@@ -21,9 +21,9 @@ class AdminController {
     ['seances',      'Séances',               '/admin/seances'],
     ['examens',      'Examens',               '/admin/examens'],
     ['resultats',    'Résultats',             '/admin/resultats'],
-    ['demandes',     'Demandes administratives', null],
-    ['reclamations', 'Réclamations',          null],
-    ['annonces',     'Annonces',              null],
+    ['demandes',     'Demandes administratives', '/admin/demandes'],
+    ['reclamations', 'Réclamations',          '/admin/reclamations'],
+    ['annonces',     'Annonces',              '/admin/annonces'],
     ['notifications', 'Notifications',        '/admin/notifications'],
     ['historique',   'Historique des actions', '/admin/historique'],
   ];
