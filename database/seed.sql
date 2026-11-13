@@ -169,3 +169,77 @@ FROM (
   SELECT 'INF102',         'TP',                      '2026-12-05',         20,            1
 ) v
 JOIN module m ON m.code = v.code;
+-- ===== Inscription, évaluations et notes de l'étudiant de test =====
+INSERT INTO inscription (idEtudiant, idFormation, idAnnee, dateInscription, statut)
+SELECT e.idEtudiant, f.idFormation, a.idAnnee, CURRENT_DATE, 'VALIDEE'
+FROM etudiant e
+JOIN formation f ON f.intitule = 'Licence en Génie Informatique'
+JOIN anneeUniversitaire a ON a.libelle = '2026-2027'
+WHERE e.cne = 'CNE0000001';
+
+INSERT INTO evaluation (idModule, type, dateEvaluation, bareme, coefficient)
+SELECT m.idModule, v.type, v.date, 20, v.coef
+FROM (
+  SELECT 'INF101' AS code, 'Contrôle continu' AS type, CURRENT_DATE - INTERVAL 30 DAY AS date, 1 AS coef
+  UNION ALL SELECT 'INF101', 'Examen final', CURRENT_DATE - INTERVAL 10 DAY, 2
+  UNION ALL SELECT 'INF102', 'Examen final', CURRENT_DATE - INTERVAL 8 DAY, 2
+) v
+JOIN module m ON m.code = v.code;
+
+INSERT INTO note (idEtudiant, idEvaluation, valeur, session)
+SELECT e.idEtudiant, ev.idEvaluation, v.valeur, 'NORMALE'
+FROM (
+  SELECT 'INF101' AS code, 'Contrôle continu' AS type, 16.00 AS valeur
+  UNION ALL SELECT 'INF101', 'Examen final', 15.00
+  UNION ALL SELECT 'INF102', 'Examen final', 13.50
+) v
+JOIN etudiant e ON e.cne = 'CNE0000001'
+JOIN module m ON m.code = v.code
+JOIN evaluation ev ON ev.idModule = m.idModule AND ev.type = v.type
+ON DUPLICATE KEY UPDATE valeur = VALUES(valeur);
+
+-- ===== Demandes administratives d'exemple =====
+INSERT INTO demandeAdministrative (idEtudiant, typeDemande, dateDemande, statut)
+SELECT e.idEtudiant, t.type, NOW() - INTERVAL t.jours DAY, t.statut
+FROM etudiant e
+JOIN (
+  SELECT 'Attestation de scolarité' AS type, 1 AS jours, 'EN_ATTENTE' AS statut
+  UNION ALL SELECT 'Relevé de notes', 3, 'EN_ATTENTE'
+  UNION ALL SELECT 'Certificat de réussite', 12, 'TRAITEE'
+) t
+WHERE e.cne = 'CNE0000001';
+
+-- ===== Réclamations d'exemple (sur des notes existantes de l'étudiant de test) =====
+INSERT INTO reclamationNote (idEtudiant, idEvaluation, motif, statut)
+SELECT e.idEtudiant, ev.idEvaluation, r.motif, r.statut
+FROM etudiant e
+JOIN (
+  SELECT 'INF101' AS code, 'Contrôle continu' AS type,
+         'Je pense qu’une question du contrôle a été mal corrigée, merci de revoir ma copie.' AS motif, 'EN_ATTENTE' AS statut
+  UNION ALL SELECT 'INF102', 'Examen final', 'Erreur dans le calcul du total des points.', 'REJETEE'
+) r
+JOIN module m ON m.code = r.code
+JOIN evaluation ev ON ev.idModule = m.idModule AND ev.type = r.type
+WHERE e.cne = 'CNE0000001';
+
+-- ===== Annonces d'exemple supplémentaires (programmée, expirée, désactivée) =====
+INSERT INTO publication (idAdmin, titre, contenu, datePublication, dateExpiration, actif)
+SELECT a.idAdmin, p.titre, p.contenu, CURRENT_DATE + INTERVAL p.debut DAY,
+       IF(p.fin IS NULL, NULL, CURRENT_DATE + INTERVAL p.fin DAY), p.actif
+FROM administrateur a
+JOIN (
+  SELECT 'Journée portes ouvertes' AS titre, 'Le département ouvre ses portes aux futurs étudiants.' AS contenu, 10 AS debut, NULL AS fin, 1 AS actif
+  UNION ALL SELECT 'Dépôt des dossiers de bourse', 'La période de dépôt est terminée.', -30, -1, 1
+  UNION ALL SELECT 'Brouillon : règlement intérieur', 'Texte en cours de relecture.', 0, NULL, 0
+) p
+WHERE a.nom = 'Admin';
+
+-- ===== Notifications supplémentaires pour l'étudiant de test =====
+INSERT INTO notification (idUser, message, lu)
+SELECT u.idUser, m.message, 0
+FROM utilisateur u
+JOIN (
+  SELECT 'Les notes du contrôle continu de INF101 sont disponibles.' AS message
+  UNION ALL SELECT 'N’oubliez pas de vérifier votre inscription aux modules.'
+) m
+WHERE u.login = 'etudiant';

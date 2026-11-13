@@ -6,9 +6,9 @@
   'utilisateurs' => ['Utilisateurs', '/admin/utilisateurs'],
   'etudiants'    => ['Étudiants', null],
   'enseignants'  => ['Enseignants', null],
-  'demandes'     => ['Demandes en attente', null],
-  'reclamations' => ['Réclamations en attente', null],
-  'annonces'     => ['Annonces actives', null],
+  'demandes'     => ['Demandes en attente', '/admin/demandes'],
+  'reclamations' => ['Réclamations en attente', '/admin/reclamations'],
+  'annonces'     => ['Annonces actives', '/admin/annonces'],
 ] as $key => [$label, $href]): ?>
   <div class="stat">
     <strong><?= (int) $counters[$key] ?></strong>

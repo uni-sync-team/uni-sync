@@ -165,4 +165,79 @@ class DemandeAdministrative
     {
         return $this->update($idDemande, ['idAdmin' => $idAdmin, 'statut' => $statut]);
     }
+
+    // ----- admin screen -----
+
+    /** @return array{0: string, 1: array} */
+    private function whereSearch(array $f): array
+    {
+        $sql = ' WHERE 1 = 1';
+        $p   = [];
+        if (($f['q'] ?? '') !== '') {
+            $sql .= ' AND (e.nom LIKE ? OR e.prenom LIKE ? OR e.cne LIKE ? OR d.typeDemande LIKE ?)';
+            $like = '%' . addcslashes($f['q'], '%_\\') . '%';
+            array_push($p, $like, $like, $like, $like);
+        }
+        if (in_array($f['statut'] ?? '', [self::STATUT_EN_ATTENTE, self::STATUT_TRAITEE, self::STATUT_REFUSEE], true)) {
+            $sql .= ' AND d.statut = ?';
+            $p[] = $f['statut'];
+        }
+        return [$sql, $p];
+    }
+
+    /** Requests with the student and the admin who handled them; pending first, then newest. */
+    public function search(array $filters, int $limit, int $offset = 0): array
+    {
+        [$where, $params] = $this->whereSearch($filters);
+        return $this->query(
+            "SELECT d.idDemande, d.typeDemande, d.dateDemande, d.statut,
+                    e.cne, e.nom, e.prenom, a.nom AS adminNom, a.prenom AS adminPrenom
+             FROM demandeAdministrative d
+             JOIN etudiant e ON e.idEtudiant = d.idEtudiant
+             LEFT JOIN administrateur a ON a.idAdmin = d.idAdmin
+             $where
+             ORDER BY (d.statut = 'EN_ATTENTE') DESC, d.dateDemande DESC
+             LIMIT " . (int) $limit . ' OFFSET ' . (int) $offset,
+            $params
+        )->fetchAll();
+    }
+
+    public function countSearch(array $filters = []): int
+    {
+        [$where, $params] = $this->whereSearch($filters);
+        return (int) $this->query(
+            "SELECT COUNT(*) FROM demandeAdministrative d JOIN etudiant e ON e.idEtudiant = d.idEtudiant $where",
+            $params
+        )->fetchColumn();
+    }
+
+    /** The request with the student's account id, to notify them. */
+    public function findWithStudent(int $id): ?array
+    {
+        $row = $this->query(
+            'SELECT d.idDemande, d.typeDemande, d.statut, e.idUser, e.nom, e.prenom
+             FROM demandeAdministrative d JOIN etudiant e ON e.idEtudiant = d.idEtudiant
+             WHERE d.idDemande = ? LIMIT 1',
+            [$id]
+        )->fetch();
+        return $row ?: null;
+    }
+
+    /** Decides a pending request. False if it was already decided (or does not exist). */
+    public function decide(int $id, ?int $idAdmin, string $statut): bool
+    {
+        return $this->query(
+            'UPDATE demandeAdministrative SET statut = ?, idAdmin = ? WHERE idDemande = ? AND statut = ?',
+            [$statut, $idAdmin, $id, self::STATUT_EN_ATTENTE]
+        )->rowCount() > 0;
+    }
+
+    /** A student's pending request of the same type already exists? */
+    public function hasPending(int $idEtudiant, string $type): bool
+    {
+        return $this->query(
+            'SELECT 1 FROM demandeAdministrative WHERE idEtudiant = ? AND typeDemande = ? AND statut = ? LIMIT 1',
+            [$idEtudiant, $type, self::STATUT_EN_ATTENTE]
+        )->fetchColumn() !== false;
+    }
 }

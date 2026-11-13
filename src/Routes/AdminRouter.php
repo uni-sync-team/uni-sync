@@ -12,6 +12,9 @@ use App\Controllers\AdminDepartementController;
 use App\Controllers\AdminEnseignantController;
 use App\Controllers\AdminSalleController;
 use App\Controllers\AdminAnneeController;
+use App\Controllers\AdminDemandeController;
+use App\Controllers\AdminReclamationController;
+use App\Controllers\AdminAnnonceController;
 use App\Controllers\AdminFiliereController;
 use App\Controllers\AdminFormationController;
 use App\Controllers\AdminSeanceController;
@@ -114,5 +117,23 @@ $adminRouter->get('/admin/resultats',                [AdminResultatController::c
 $adminRouter->post('/admin/resultats/calculer',      [AdminResultatController::class, 'calculer'],  $adminPost);
 $adminRouter->get('/admin/resultats/examens/{id}',   [AdminResultatController::class, 'notes'],     $admin);
 $adminRouter->post('/admin/resultats/examens/{id}',  [AdminResultatController::class, 'saveNotes'], $adminPost);
+
+// admin - demandes administratives
+$adminRouter->get('/admin/demandes',                  [AdminDemandeController::class, 'index'],   $admin);
+$adminRouter->post('/admin/demandes/{id}/traiter',    [AdminDemandeController::class, 'traiter'], $adminPost);
+$adminRouter->post('/admin/demandes/{id}/refuser',    [AdminDemandeController::class, 'refuser'], $adminPost);
+
+// admin - reclamations
+$adminRouter->get('/admin/reclamations',                 [AdminReclamationController::class, 'index'],    $admin);
+$adminRouter->post('/admin/reclamations/{id}/accepter',  [AdminReclamationController::class, 'accepter'], $adminPost);
+$adminRouter->post('/admin/reclamations/{id}/rejeter',   [AdminReclamationController::class, 'rejeter'],  $adminPost);
+
+// admin - annonces
+$adminRouter->get('/admin/annonces',                  [AdminAnnonceController::class, 'index'],   $admin);
+$adminRouter->get('/admin/annonces/nouveau',          [AdminAnnonceController::class, 'create'],  $admin);
+$adminRouter->post('/admin/annonces',                 [AdminAnnonceController::class, 'store'],   $adminPost);
+$adminRouter->get('/admin/annonces/{id}/modifier',    [AdminAnnonceController::class, 'edit'],    $admin);
+$adminRouter->post('/admin/annonces/{id}',            [AdminAnnonceController::class, 'update'],  $adminPost);
+$adminRouter->post('/admin/annonces/{id}/supprimer',  [AdminAnnonceController::class, 'destroy'], $adminPost);
 
 return $adminRouter;
